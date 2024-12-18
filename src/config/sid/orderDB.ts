@@ -1,8 +1,5 @@
 import fs from 'fs'
-import Year from '../../models/year'
-import City from '../../models/city'
-import Organization from '../../models/organization'
-import Attack from '../../models/attack'
+import {Attack, Organization, City, Year} from '../../models/collections'
 import Event from '../../models/event'
 import { Types } from 'mongoose'
 
@@ -14,8 +11,7 @@ export const orderDB = async () => {
             if (!event || !event.iyear ||
                 !event.imonth || !event.city ||
                 !event.latitude || !event.longitude ||
-                !event.attacktype1_txt || !event.gname ||
-                !event.nkill || !event.nwound
+                !event.attacktype1_txt || !event.gname
             ) {
                 console.log('wrong')
                 continue
@@ -28,7 +24,7 @@ export const orderDB = async () => {
                 lon: event.longitude,
                 attack_type: event.attacktype1_txt,
                 organization_name: event.gname,
-                casualties: (event.nkill + event.nwound).toFixed()
+                casualties: (event.nkill || 0 + event.nwound || 0).toFixed()
             })
             number++
             console.log(number)
