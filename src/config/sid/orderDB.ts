@@ -1,5 +1,5 @@
 import fs from 'fs'
-import {Attack, Organization, City, Year} from '../../models/collections'
+import {AttackType, Organization, City, Year} from '../../models/collections'
 import Event from '../../models/event'
 import { Types } from 'mongoose'
 
@@ -32,7 +32,7 @@ export const orderDB = async () => {
             await addRefToCollection(Year, newEvent.year, newEvent._id, newEvent.casualties)
             await addRefToCollection(City, newEvent.city, newEvent._id, newEvent.casualties)
             await addRefToCollection(Organization, newEvent.organization_name, newEvent._id, newEvent.casualties)
-            await addRefToCollection(Attack, newEvent.attack_type, newEvent._id, newEvent.casualties)
+            await addRefToCollection(AttackType, newEvent.attack_type, newEvent._id, newEvent.casualties)
         }
     } catch (err) {
         console.error(err)
@@ -41,7 +41,7 @@ export const orderDB = async () => {
 }
 
 const addRefToCollection = async (
-    model: typeof Year | typeof Organization | typeof City | typeof Attack,
+    model: typeof Year | typeof Organization | typeof City | typeof AttackType,
     name: string,
     ref: Types.ObjectId | any,
     casualties: number

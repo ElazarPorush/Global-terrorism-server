@@ -21,4 +21,4 @@ const CollectionSchema  = new Schema<ICollection>({
 export const City = mongoose.model<ICollection>("City", CollectionSchema);
 export const Year = mongoose.model<ICollection>("Year", CollectionSchema);
 export const Organization = mongoose.model<ICollection>("Organization", CollectionSchema);
-export const Attack = mongoose.model<ICollection>("Attack", CollectionSchema);
+export const AttackType = mongoose.model<ICollection>("Attack", CollectionSchema);
