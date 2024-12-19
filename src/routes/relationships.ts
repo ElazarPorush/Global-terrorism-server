@@ -1,11 +1,12 @@
 import { Router } from "express";
+import { getOrganizationsInArea } from "../controllers/relationships";
 
 const router = Router();
 
-router.get('/', ()=>{});
+router.get('/top-groups/', getOrganizationsInArea);
 
-router.get('/', ()=>{});
+router.get('/groups-by-year/', ()=>{});
 
-router.get('/', ()=>{});
+router.get('/deadliest-regions/', ()=>{});
 
 export default router;
