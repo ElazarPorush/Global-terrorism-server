@@ -26,3 +26,11 @@ export const getHighestCasualtyCities = async () => {
         throw err;
     }
 };
+
+export const getAttacksTypeByYear = async (year: string) => {
+    try {
+        
+    } catch (err) {
+        throw err;
+    }
+};
