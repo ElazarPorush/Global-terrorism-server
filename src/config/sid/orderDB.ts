@@ -7,7 +7,6 @@ import { getCityName } from '../../utils/location'
 
 export const orderDB = async () => {
     try {
-        let number = 0
         const data = await JSON.parse(fs.readFileSync('./data/data.json', 'utf-8'))
         for (const event of data) {
             if (!event || !event.iyear ||
@@ -15,14 +14,10 @@ export const orderDB = async () => {
                 !event.latitude || !event.longitude ||
                 !event.attacktype1_txt || !event.gname
             ) {
-                console.log('wrong')
                 continue
             }
         if (event.city === "Unknown") {
             event.city = await getCityName(event.latitude, event.longitude)
-            if (!event.city) {
-                console.log('wrong location')
-            }
         }
             const newEvent = new Event({
                 year: event.iyear.toString(),
@@ -34,8 +29,6 @@ export const orderDB = async () => {
                 organization_name: event.gname,
                 casualties: (event.nkill || 0 + event.nwound || 0).toFixed()
             })
-            number++
-            console.log(number)
             await newEvent.save()
             await addRefToCollection(Year, newEvent.year, newEvent._id, newEvent.casualties)
             if (event.city) {
