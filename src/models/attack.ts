@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
-import { IEvent } from "../types/event";
+import { IAttack } from "../types/attack";
 
-const EventSchema = new Schema<IEvent>({
+const AttackSchema = new Schema<IAttack>({
     year: {
         type: String,
         required: true,
@@ -38,4 +38,4 @@ const EventSchema = new Schema<IEvent>({
     },
 });
 
-export default mongoose.model<IEvent>("Event", EventSchema);
+export default mongoose.model<IAttack>("Attack", AttackSchema);

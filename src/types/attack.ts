@@ -1,6 +1,6 @@
 import { Document } from "mongoose"
 
-export interface IEvent extends Document {
+export interface IAttack extends Document {
     _id: string
     year: string
     month: number

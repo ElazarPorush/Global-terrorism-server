@@ -1,7 +1,9 @@
 import fs from 'fs'
-import {AttackType, Organization, City, Year} from '../../models/collections'
-import Event from '../../models/event'
+import { AttackType, Organization, City, Year } from '../../models/collections'
+import Event from '../../models/attack'
 import { Types } from 'mongoose'
+import { IAttack } from '../../types/attack'
+import { getCityName } from '../../utils/location'
 
 export const orderDB = async () => {
     try {
@@ -16,10 +18,16 @@ export const orderDB = async () => {
                 console.log('wrong')
                 continue
             }
+        if (event.city === "Unknown") {
+            event.city = await getCityName(event.latitude, event.longitude)
+            if (!event.city) {
+                console.log('wrong location')
+            }
+        }
             const newEvent = new Event({
                 year: event.iyear.toString(),
                 month: event.imonth,
-                city: event.city,
+                city: event.city || "Unknown",
                 lat: event.latitude,
                 lon: event.longitude,
                 attack_type: event.attacktype1_txt,
@@ -30,7 +38,9 @@ export const orderDB = async () => {
             console.log(number)
             await newEvent.save()
             await addRefToCollection(Year, newEvent.year, newEvent._id, newEvent.casualties)
-            await addRefToCollection(City, newEvent.city, newEvent._id, newEvent.casualties)
+            if (event.city) {
+                await addRefToCollection(City, newEvent.city, newEvent._id, newEvent.casualties)
+            }
             await addRefToCollection(Organization, newEvent.organization_name, newEvent._id, newEvent.casualties)
             await addRefToCollection(AttackType, newEvent.attack_type, newEvent._id, newEvent.casualties)
         }
@@ -47,12 +57,12 @@ const addRefToCollection = async (
     casualties: number
 ) => {
     try {
-        const object = await model.findOne({ name })
-        if (object) {
-            object.events.push(ref)
-            const tempCasualties = object.casualties
-            object.casualties = casualties + tempCasualties
-            await object.save()
+        const obj = await model.findOne({ name })
+        if (obj) {
+            obj.attacks.push(ref)
+            const tempCasualties = obj.casualties
+            obj.casualties = casualties + tempCasualties
+            await obj.save()
         }
         else {
             const newObject = new model({

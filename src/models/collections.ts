@@ -7,18 +7,18 @@ const CollectionSchema  = new Schema<ICollection>({
         required: true,
         unique: true
     },
-    events: {
-        ref: "Event",
+    attacks: {
+        ref: "Attack",
         type: [Schema.Types.ObjectId],
         default: []
     },
     casualties: {
         type: Number,
         default: 0
-    }  
+    }
 });
 
 export const City = mongoose.model<ICollection>("City", CollectionSchema);
 export const Year = mongoose.model<ICollection>("Year", CollectionSchema);
 export const Organization = mongoose.model<ICollection>("Organization", CollectionSchema);
-export const AttackType = mongoose.model<ICollection>("Attack", CollectionSchema);
+export const AttackType = mongoose.model<ICollection>("AttackType", CollectionSchema);

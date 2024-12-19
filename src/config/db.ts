@@ -1,6 +1,6 @@
 import { connect } from "mongoose";
 import { orderDB } from "./sid/orderDB";
-import Event from '../models/event'
+import Event from '../models/attack'
 
 export const connectToMongo = async () => {
     try {
