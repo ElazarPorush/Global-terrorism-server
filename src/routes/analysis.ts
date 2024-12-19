@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { getSortedAttacks } from "../controllers/analysis";
+import { getHighestCasualtyCity, getSortedAttacks } from "../controllers/analysis";
 
 const router = Router();
 
 router.get('/deadliest-attack-types/', getSortedAttacks);
 
-router.get('/', ()=>{});
+router.get('/highest-casualty-regions/', getHighestCasualtyCity);
 
 router.get('/', ()=>{});
 
