@@ -8,7 +8,7 @@ export const getCoordinates = async (city: string) => {
     if (!data) {
       throw new Error('City not found');
     }
-    return { lat: data[0].lat, lon: data[0].lon }
+    return data[0]
   } catch (err) {;
     throw err;
   }
