@@ -1,5 +1,5 @@
 import { AttackType, City, Year } from "../models/collections"
-import { getCityName } from "../utils/location"
+import { getCoordinates } from "../utils/location"
 
 export const getSortedAttacksByType = async () => {
     try {
@@ -12,14 +12,17 @@ export const getSortedAttacksByType = async () => {
 
 export const getHighestCasualtyCities = async () => {
     try {
-        const cities = await City.find()
-        const sortedCities = cities.map(city => ({
-            ...city.toObject(),
-            average: city.casualties / (city.attacks.length || 1)
+        const cities = await City.find();
+        const sortedCities = await Promise.all(cities.map(async (city) => {
+            const location = await getCoordinates(city.name);
+            return {
+                city: city.name,
+                average: city.casualties / (city.attacks.length || 1),
+                location: location
+            };
         }))
-        .sort((a, b) => b.average - a.average); 
-        return sortedCities.map(({ attacks, casualties, ...rest }) => rest);
+        return sortedCities.sort((a, b) => b.average - a.average);
     } catch (err) {
-        throw err
+        throw err;
     }
-} 
+};
