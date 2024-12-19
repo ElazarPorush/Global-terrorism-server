@@ -7,7 +7,7 @@ export const getOrganizationsInArea = async (
     next: NextFunction
   ) => {
     try {
-      const data = await getSortedOrganizationsInArea(req.body.area)
+      const data = await getSortedOrganizationsInArea(req.params.area)
       res.json(data)
     } catch (err) {
       console.error("[server] Can't get sorted organizations in area", err);
