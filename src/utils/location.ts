@@ -5,12 +5,15 @@ const API_KEY = process.env.OPEN_WEATHER_MAP_API_key;
 export const getCoordinates = async (city: string) => {
   try {
     const data = (await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`)).data;
-    if (!data) {
-      throw new Error('City not found');
+    if (!data || !data[0].lat || !data[0].lon) {
+      return
     }
-    return data[0]
+    return {
+      lat: data[0].lat as number,
+      lng: data[0].lon as number
+    } 
   } catch (err) {;
-    throw err;
+    return
   }
 }
 
