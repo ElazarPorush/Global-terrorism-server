@@ -1,5 +1,6 @@
 import { AttackType, City, Year } from "../models/collections"
 import { CityDTO } from "../types/dto/city"
+import { YearDTO } from "../types/dto/yearDto"
 import { getCoordinates } from "../utils/location"
 
 export const getSortedAttacksByType = async () => {
@@ -49,9 +50,22 @@ export const getHighestCasualtyCities = async () => {
     }
 };
 
-export const getAttacksTypeByYear = async (year: string) => {
+export const getAttacksTypeByYear = async (year: YearDTO) => {
     try {
+        const attacks: any = await Year.find({
+            name: { $gte: year.from, $lte: year.to }
+        }).populate('attacks');
 
+        const attackCounts: { [key: string]: number } = {};
+        for (const attack of attacks) {
+            for (const atk of attack.attacks) {
+                attackCounts[atk.attack_type] = (attackCounts[atk.attack_type] || 0) + 1;
+            }
+        }
+
+        const attackTypes = Object.entries(attackCounts)
+            .map(([name, count]) => ({ name, count }));
+        return attackTypes;
     } catch (err) {
         throw err;
     }

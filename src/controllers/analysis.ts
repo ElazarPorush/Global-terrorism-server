@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { getAttacksTypeByYear, getHighestCasualtyCities, getSortedAttacksByType } from "../services/analysis";
+import { YearDTO } from "../types/dto/yearDto";
 
 export const getSortedAttacks = async (
     req: Request,
@@ -30,12 +31,12 @@ export const getHighestCasualtyCity = async (
 };
 
 export const getAttacksTypesByYear = async (
-    req: Request,
+    req: Request<any, any, any, YearDTO>,
     res: Response,
     next: NextFunction
   ) => {
     try {
-      const data = await getAttacksTypeByYear(req.body.year)
+      const data = await getAttacksTypeByYear(req.query)
       res.json(data)
     } catch (err) {
       console.error("[server] Can't get attacks types by year", err);
