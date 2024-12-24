@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { getOrganizationsInArea } from "../controllers/relationships";
+import { getOrganizationsByYear, getOrganizationsInArea } from "../controllers/relationships";
 
 const router = Router();
 
 router.get('/top-groups/:area', getOrganizationsInArea);
 
-router.get('/groups-by-year/', ()=>{});
+router.get('/groups-by-year/:year', getOrganizationsByYear);
 
 router.get('/deadliest-regions/', ()=>{});
 
