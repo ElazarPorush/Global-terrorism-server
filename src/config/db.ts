@@ -1,13 +1,13 @@
 import { connect } from "mongoose";
 import { orderDB } from "./sid/orderDB";
-import Event from '../models/attack'
+import Attack from "../models/attack";
 
 export const connectToMongo = async () => {
     try {
-        await connect('mongodb://localhost/Terrorism');
+        await connect(process.env.MONGO_URL as string);
         console.log('[database] mongo connected successfully');
-        const event = await Event.findOne()
-        if (!event) {
+        const attack = await Attack.findOne()
+        if (!attack) {
             await orderDB()
             console.log('[database] data created')
         }
