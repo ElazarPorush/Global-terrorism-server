@@ -1,4 +1,6 @@
+import { addAttackToDatabase } from "../config/sid/orderDB"
 import { AttackType, City, Year } from "../models/collections"
+import { AttackFromData } from "../types/dto/attackDataDto"
 import { CityDTO } from "../types/dto/city"
 import { YearDTO } from "../types/dto/yearDto"
 import { getCoordinates } from "../utils/location"
@@ -14,36 +16,22 @@ export const getSortedAttacksByType = async () => {
 
 export const getHighestCasualtyCities = async () => {
     try {
-        //@ts-ignore
-        const cities: CityDTO[] = await City.find({}).populate('attacks');
-        const sortedCities = await Promise.all(cities.map(async (city) => {
-            let location: { lat: number, lng: number } = { lat: 0, lng: 0 }
-            if (!city.attacks[0] || !city.attacks[0].lat || !city.attacks[0].lon) {
-                const coordinates = await getCoordinates(city.name);
-                if (coordinates) {
-                    location = coordinates!
-                }
-                else if (city.attacks[1] && city.attacks[1].lat && city.attacks[1].lon) {
-                    location = {
-                        lat: city.attacks[1].lat as number,
-                        lng: city.attacks[1].lon as number
-                    }
-                }
-            }
-            else {
+        const cities: any[] = await City.find({}).populate('attacks');
+        const sortedCities = cities.map((city) => {
+            let location = {}
+            if (city.attacks.length > 0 && city.attacks[0] && city.attacks[0].lat && city.attacks[0].lon) {
                 location = {
-                    lat: city.attacks[0].lat as number,
-                    lng: city.attacks[0].lon as number
+                    lat: city.attacks[0].lat,
+                    lng: city.attacks[0].lon
                 }
             }
             return {
                 city: city.name,
                 average: city.casualties / (city.attacks.length || 1),
                 location: location
-            };
-        }))
-        const sorted = sortedCities.sort((a, b) => b.average - a.average).slice(0, 20);
-        console.log('Done')
+            }
+        });
+        const sorted = sortedCities.sort((a, b) => b.average - a.average).slice(0, 100);
         return sorted
     } catch (err) {
         throw err;
@@ -66,6 +54,15 @@ export const getAttacksTypeByYear = async (year: YearDTO) => {
         const attackTypes = Object.entries(attackCounts)
             .map(([name, count]) => ({ name, count }));
         return attackTypes;
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const addNewAttackToDatabase = async (attack: AttackFromData) => {
+    try {
+        await addAttackToDatabase(attack)
+        return
     } catch (err) {
         throw err;
     }
